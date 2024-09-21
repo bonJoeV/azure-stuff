@@ -3,7 +3,7 @@
 This repository automates the deployment of an **Azure Managed Lustre** file system using **Terraform** and **GitHub Actions**. It includes Terraform scripts, a GitHub Actions workflow for CI/CD, and a Lustre configuration file.
 
 ## Project Structure
-
+```
 .
 ├── main.tf                    # Terraform script to deploy Azure Managed Lustre
 ├── .github
@@ -12,7 +12,7 @@ This repository automates the deployment of an **Azure Managed Lustre** file sys
 ├── lustre_configuration.json   # Configuration file for Azure Managed Lustre
 ├── README.md                   # Readme file with project details and setup instructions
 └── LICENSE                     # MIT License file
-
+```
 
 ## Prerequisites
 
