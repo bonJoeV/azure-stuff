@@ -35,11 +35,21 @@ variable "delay_between_retries" {
   default = 300 # 5 minutes in seconds
 }
 
-# Create Resource Group
+# Define the resource group for the Lustre deployment
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
 }
+
+# Create the Azure Managed Lustre file system
+resource "azurerm_lustre_file_system" "lustre" {
+  name                = var.lustre_name
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  sku                 = var.sku
+  storage_capacity    = var.storage_capacity
+}
+
 
 # Using null_resource to run Azure CLI commands for creating Lustre
 resource "null_resource" "create_lustre_fs" {
