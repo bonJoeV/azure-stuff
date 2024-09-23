@@ -2,7 +2,9 @@
 
 <!--![Build Status](https://github.com/bonJoeV/azure-stuff/workflows/CI/badge.svg)-->
 ![Terraform Version](https://img.shields.io/badge/Terraform-1.x-blue)
-![License](https://img.shields.io/github/license/bonjoev/azure-stuff)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![License](https://img.shields.io/badge/Built_by-bonJoeV-blue)
+
 
 
 This repository automates the deployment of an **Azure Managed Lustre** file system using **Terraform** and **GitHub Actions**. It includes Terraform scripts, a GitHub Actions workflow for CI/CD, and a Lustre configuration file.
