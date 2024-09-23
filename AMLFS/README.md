@@ -1,18 +1,16 @@
 # Azure Managed Lustre Deployment with Terraform and GitHub Actions
 
-<!--![Build Status](https://github.com/bonJoeV/azure-stuff/workflows/CI/badge.svg)-->
 ![Terraform Version](https://img.shields.io/badge/Terraform-1.x-blue)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![License](https://img.shields.io/badge/Built_by-bonJoeV-blue)
-
-
 
 This repository automates the deployment of an **Azure Managed Lustre** file system using **Terraform** and **GitHub Actions**. It includes Terraform scripts, a GitHub Actions workflow for CI/CD, and a Lustre configuration file.
 
 Azure Managed Lustre is ideal for workloads that require low-latency, high-throughput storage, such as big data analytics, AI/ML model training, and media processing.
 
 ## Project Structure
-```
+
+```plaintext
 .
 ├── .github
 │   └── workflows
@@ -31,7 +29,6 @@ Azure Managed Lustre is ideal for workloads that require low-latency, high-throu
 2. **Service Principal**: You need an Azure Service Principal with sufficient permissions to deploy resources. Follow the [official Azure documentation](https://learn.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli) to create a service principal.
 3. **Terraform**: Install Terraform (version 1.x or higher) on your local machine. Refer to [Terraform Install Guide](https://learn.hashicorp.com/tutorials/terraform/install-cli) for detailed instructions. Alternatively, the CI/CD pipeline provided in this repository will handle Terraform installation automatically.
 
-
 ## Setup Instructions
 
 ### 1. Create GitHub Secrets
@@ -49,13 +46,16 @@ Optionally, you can store these credentials as a single **`AZURE_CREDENTIALS`** 
 
 In the `main.tf`, you can adjust the following variables based on your deployment needs:
 
-- **`resource_group_name`**: The name of the Azure Resource Group where the Managed Lustre file system will be created.
-- **`location`**: The Azure region where resources will be deployed (e.g., `southcentralus`). Note that certain regions may offer different pricing and availability.
-- **`lustre_name`**: The name to be assigned to the Lustre file system.
-- **`sku`**: The storage SKU for the file system. Available options are:
-  - `Standard_LRS`: Offers lower cost but limited redundancy.
-  - `Premium_LRS`: Provides higher redundancy and performance at a higher cost.
-- **`storage_capacity`**: The size of the Lustre file system in TB. Choose the size based on the expected data throughput and storage needs.
+| Variable              | Description                                | Default Value         |
+|-----------------------|--------------------------------------------|-----------------------|
+| `resource_group_name`  | The name of the Azure resource group       | `myResourceGroup`     |
+| `location`             | Azure region for the resources             | `southcentralus`      |
+| `lustre_name`          | Name of the Lustre file system             | `myLustreFS`          |
+| `sku`                  | SKU for the Lustre file system             | `Standard_LRS`        |
+| `storage_capacity`     | Storage capacity in TB                     | `32`                  |
+| `lustre_config_file`   | Path to the Lustre configuration JSON file | `./lustre_configuration.json` |
+| `retry_limit`          | Number of retry attempts                   | `5`                   |
+| `delay_between_retries`| Delay between retries in seconds (5 mins)  | `300`                 |
 
 ### 3. GitHub Actions Workflow
 
@@ -64,11 +64,9 @@ The **GitHub Actions** workflow (`terraform.yml`) will automatically run on a pu
 - Authenticate to Azure using a Service Principal.
 - Initialize Terraform and set up the backend for storing state in Azure.
 - Deploy the Azure Managed Lustre file system.
+- Use retry logic in case of transient deployment issues.
 
-In case of deployment errors, navigate to the **Actions** tab in your GitHub repository to inspect detailed logs. The logs provide step-by-step output of the workflow, including any errors encountered during the Terraform plan or apply stages. To retry a failed deployment, you can re-run the workflow manually or trigger a new run by pushing updates to the `main` branch.
-
-Additionally, the `terraform.yml` workflow includes automatic retry logic with exponential backoff in case of transient issues, reducing the need for manual interventions.
-
+You can monitor the deployment process in the **Actions** tab of your GitHub repository.
 
 ### 4. Run the Deployment
 
@@ -80,11 +78,7 @@ You can monitor the deployment process in the **Actions** tab of your GitHub rep
 
 ### Alternate Deployment Option: `createAMLFS.sh`
 
-If you prefer not to use Terraform and GitHub Actions for deployment, you can utilize the `createAMLFS.sh` script as an alternate deployment method. This script simplifies the setup process by directly using Azure CLI commands to create and configure an Azure Managed Lustre file system. The script also includes built-in retry and backoff logic to handle transient errors.
-
-**[createAMLFS.sh](createAMLFS.sh)**
-
-Use this script in scenarios where you want more direct control over the deployment process or where Terraform is not available.
+If you prefer not to use Terraform and GitHub Actions for deployment, you can utilize the [`createAMLFS.sh`](./createAMLFS.sh) script as an alternate deployment method. This script simplifies the setup process by directly using Azure CLI commands to create and configure an Azure Managed Lustre file system. The script also includes built-in retry and backoff logic to handle transient errors.
 
 To run the script:
 1. Ensure you have the Azure CLI installed (`az` command).
@@ -92,8 +86,6 @@ To run the script:
 3. Run the script using the following command:
    ```bash
    bash createAMLFS.sh
-   ```
-
 ### Security Best Practices
 
 - Use **Azure Key Vault** to store and manage secrets securely, such as your Azure Service Principal credentials.
@@ -102,11 +94,9 @@ To run the script:
 
 ### Troubleshooting
 
-**Issue**: Deployment fails with an authentication error.
-**Solution**: Ensure that the Azure Service Principal credentials are correctly set up as GitHub secrets (e.g., `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, `ARM_TENANT_ID`, `ARM_SUBSCRIPTION_ID`). Verify that the Service Principal has the necessary permissions in your Azure subscription.
-
-**Issue**: Insufficient storage capacity error.
-**Solution**: Check the `storage_capacity` setting in the `main.tf` file to ensure that the requested capacity is within the limits for the selected region and SKU.
+- **Authentication Errors**: Ensure that the Azure Service Principal credentials are correctly set up as GitHub secrets (`ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, `ARM_TENANT_ID`, `ARM_SUBSCRIPTION_ID`). Verify that the Service Principal has the necessary permissions in your Azure subscription.
+- **Insufficient Storage Capacity Error**: Check the `storage_capacity` setting in the `main.tf` file to ensure that the requested capacity is within the limits for the selected region and SKU.
+- **Deployment Fails with Retry Limit Reached**: If the retry limit is reached, check the Azure CLI logs for possible issues with the Lustre configuration or resource availability in the specified region. Modify the `retry_limit` or `delay_between_retries` in the Terraform configuration to adjust the retry logic.
 
 ### Cost Considerations
 
@@ -118,7 +108,7 @@ For testing and development purposes, consider using a smaller capacity and the 
 
 Here’s a sample configuration for `main.tf`:
 
-```HCL
+```hcl
 variable "resource_group_name" {
   default = "example-lustre-rg"
 }
@@ -139,7 +129,8 @@ variable "storage_capacity" {
   default = 16  # 16 TB
 }
 ```
-This example will deploy a 16 TB Lustre file system in the eastus region, using the Standard_LRS storage SKU for lower cost.
+
+This example will deploy a 16 TB Lustre file system in the `eastus` region, using the `Standard_LRS` storage SKU for lower cost.
 
 ### Resources
 
@@ -150,6 +141,7 @@ This example will deploy a 16 TB Lustre file system in the eastus region, using 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -178,14 +170,14 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_delay_between_retries"></a> [delay\_between\_retries](#input\_delay\_between\_retries) | n/a | `number` | `300` | no |
-| <a name="input_location"></a> [location](#input\_location) | n/a | `string` | `"southcentralus"` | no |
-| <a name="input_lustre_config_file"></a> [lustre\_config\_file](#input\_lustre\_config\_file) | n/a | `string` | `"./lustre_configuration.json"` | no |
-| <a name="input_lustre_name"></a> [lustre\_name](#input\_lustre\_name) | n/a | `string` | `"myLustreFS"` | no |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Define variables | `string` | `"myResourceGroup"` | no |
-| <a name="input_retry_limit"></a> [retry\_limit](#input\_retry\_limit) | n/a | `number` | `5` | no |
-| <a name="input_sku"></a> [sku](#input\_sku) | n/a | `string` | `"Standard_LRS"` | no |
-| <a name="input_storage_capacity"></a> [storage\_capacity](#input\_storage\_capacity) | n/a | `number` | `32` | no |
+| <a name="input_delay_between_retries"></a> [delay\_between\_retries](#input\_delay\_between\_retries) | Delay between retry attempts (in seconds). | `number` | `300` | no |
+| <a name="input_location"></a> [location](#input\_location) | The Azure region where resources will be deployed. | `string` | `"southcentralus"` | no |
+| <a name="input_lustre_config_file"></a> [lustre\_config\_file](#input\_lustre\_config_file) | Path to the Lustre configuration JSON file. | `string` | `"./lustre_configuration.json"` | no |
+| <a name="input_lustre_name"></a> [lustre\_name](#input\_lustre_name) | Name of the Lustre file system. | `string` | `"myLustreFS"` | no |
+| <a name="input_resource_group_name"></a> [resource\_group_name](#input\_resource_group_name) | The name of the Azure resource group for deployment. | `string` | `"myResourceGroup"` | no |
+| <a name="input_retry_limit"></a> [retry\_limit](#input_retry_limit) | Maximum number of retries for Lustre creation. | `number` | `5` | no |
+| <a name="input_sku"></a> [sku](#input\_sku) | SKU for the Lustre file system (`Standard_LRS` or `Premium_LRS`). | `string` | `"Standard_LRS"` | no |
+| <a name="input_storage_capacity"></a> [storage\_capacity](#input_storage_capacity) | Storage capacity in TB for the Lustre file system. | `number` | `32` | no |
 
 ## Outputs
 
