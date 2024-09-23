@@ -35,6 +35,10 @@ variable "delay_between_retries" {
   default = 300 # 5 minutes in seconds
 }
 
+variable "availability_zone" {
+  default = 1 # Modify this based on the available zones for your region
+}
+
 # Define the resource group for the Lustre deployment
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
@@ -48,8 +52,8 @@ resource "azurerm_lustre_file_system" "lustre" {
   location            = var.location
   sku                 = var.sku
   storage_capacity    = var.storage_capacity
+  zone                = var.availability_zone
 }
-
 
 # Using null_resource to run Azure CLI commands for creating Lustre
 resource "null_resource" "create_lustre_fs" {
@@ -60,8 +64,15 @@ resource "null_resource" "create_lustre_fs" {
       SUCCESS=0
 
       create_managed_lustre() {
-        echo "Attempting to create Azure Managed Lustre: ${var.lustre_name} in region ${var.location} with ${var.storage_capacity} TB and SKU ${var.sku}..."
-        az lustre create           --resource-group ${var.resource_group_name}           --name ${var.lustre_name}           --location ${var.location}           --sku ${var.sku}           --storage-capacity ${var.storage_capacity}           --lustre-configuration ${var.lustre_config_file}
+        echo "Attempting to create Azure Managed Lustre: ${var.lustre_name} in region ${var.location} with ${var.storage_capacity} TB, SKU ${var.sku}, and Availability Zone ${var.availability_zone}..."
+        az lustre create \
+          --resource-group ${var.resource_group_name} \
+          --name ${var.lustre_name} \
+          --location ${var.location} \
+          --sku ${var.sku} \
+          --storage-capacity ${var.storage_capacity} \
+          --availability-zone ${var.availability_zone} \
+          --lustre-configuration ${var.lustre_config_file}
         return $?
       }
 

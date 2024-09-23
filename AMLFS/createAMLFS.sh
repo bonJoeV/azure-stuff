@@ -8,6 +8,7 @@ LUSTRE_NAME=${4:-"myLustreFS"}  # Azure Lustre file system name
 SKU=${5:-"Standard_LRS"}  # Lustre SKU (Standard_LRS or Premium_LRS), default is Standard_LRS
 LUSTRE_CONFIG_FILE=${6:-"lustre_configuration.json"}  # Lustre configuration file
 LOCATION="southcentralus"  # Fixed region to South Central US
+ZONE=${7:-1}  # Availability zone, default is zone 1
 DELAY_BETWEEN_RETRIES=300  # 5 minutes (300 seconds) delay between retries
 
 # Retry configuration
@@ -16,7 +17,7 @@ SUCCESS=0
 
 # Function to create Managed Lustre file system
 create_managed_lustre() {
-    echo "Attempting to create Azure Managed Lustre: $LUSTRE_NAME in region $LOCATION with $STORAGE_CAPACITY TB and SKU $SKU..."
+    echo "Attempting to create Azure Managed Lustre: $LUSTRE_NAME in region $LOCATION with $STORAGE_CAPACITY TB, SKU $SKU, and Availability Zone $ZONE..."
 
     az lustre create \
         --resource-group $RESOURCE_GROUP \
@@ -24,6 +25,7 @@ create_managed_lustre() {
         --location $LOCATION \
         --sku $SKU \
         --storage-capacity $STORAGE_CAPACITY \
+        --availability-zone $ZONE \
         --lustre-configuration $LUSTRE_CONFIG_FILE
 
     return $?

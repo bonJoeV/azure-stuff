@@ -170,14 +170,15 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_delay_between_retries"></a> [delay\_between\_retries](#input\_delay\_between\_retries) | Delay between retry attempts (in seconds). | `number` | `300` | no |
-| <a name="input_location"></a> [location](#input\_location) | The Azure region where resources will be deployed. | `string` | `"southcentralus"` | no |
-| <a name="input_lustre_config_file"></a> [lustre\_config\_file](#input\_lustre\_config_file) | Path to the Lustre configuration JSON file. | `string` | `"./lustre_configuration.json"` | no |
-| <a name="input_lustre_name"></a> [lustre\_name](#input\_lustre_name) | Name of the Lustre file system. | `string` | `"myLustreFS"` | no |
-| <a name="input_resource_group_name"></a> [resource\_group_name](#input\_resource_group_name) | The name of the Azure resource group for deployment. | `string` | `"myResourceGroup"` | no |
-| <a name="input_retry_limit"></a> [retry\_limit](#input_retry_limit) | Maximum number of retries for Lustre creation. | `number` | `5` | no |
-| <a name="input_sku"></a> [sku](#input\_sku) | SKU for the Lustre file system (`Standard_LRS` or `Premium_LRS`). | `string` | `"Standard_LRS"` | no |
-| <a name="input_storage_capacity"></a> [storage\_capacity](#input_storage_capacity) | Storage capacity in TB for the Lustre file system. | `number` | `32` | no |
+| <a name="input_availability_zone"></a> [availability\_zone](#input\_availability\_zone) | n/a | `number` | `1` | no |
+| <a name="input_delay_between_retries"></a> [delay\_between\_retries](#input\_delay\_between\_retries) | n/a | `number` | `300` | no |
+| <a name="input_location"></a> [location](#input\_location) | n/a | `string` | `"southcentralus"` | no |
+| <a name="input_lustre_config_file"></a> [lustre\_config\_file](#input\_lustre\_config\_file) | n/a | `string` | `"./lustre_configuration.json"` | no |
+| <a name="input_lustre_name"></a> [lustre\_name](#input\_lustre\_name) | n/a | `string` | `"myLustreFS"` | no |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Define variables | `string` | `"myResourceGroup"` | no |
+| <a name="input_retry_limit"></a> [retry\_limit](#input\_retry\_limit) | n/a | `number` | `5` | no |
+| <a name="input_sku"></a> [sku](#input\_sku) | n/a | `string` | `"Standard_LRS"` | no |
+| <a name="input_storage_capacity"></a> [storage\_capacity](#input\_storage\_capacity) | n/a | `number` | `32` | no |
 
 ## Outputs
 
