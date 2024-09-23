@@ -14,13 +14,15 @@ Azure Managed Lustre is ideal for workloads that require low-latency, high-throu
 ## Project Structure
 ```
 .
-├── main.tf                    # Terraform script to deploy Azure Managed Lustre
 ├── .github
 │   └── workflows
 │       └── terraform.yml       # GitHub Actions workflow for CI/CD
-├── lustre_configuration.json   # Configuration file for Azure Managed Lustre
+├── CONTRIBUTING.md             # Contribution information
+├── LICENSE                     # MIT License file
 ├── README.md                   # Readme file with project details and setup instructions
-└── LICENSE                     # MIT License file
+├── createAMLFS.sh              # Manual bash script
+├── lustre_configuration.json   # Configuration file for Azure Managed Lustre
+└── main.tf                     # Terraform script to deploy Azure Managed Lustre
 ```
 
 ## Prerequisites
