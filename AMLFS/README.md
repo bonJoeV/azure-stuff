@@ -92,6 +92,21 @@ To run the script:
 3. Run the script using the following command:
    ```bash
    bash createAMLFS.sh
+   ```
+
+### Security Best Practices
+
+- Use **Azure Key Vault** to store and manage secrets securely, such as your Azure Service Principal credentials.
+- Regularly rotate your Service Principal credentials to maintain a secure environment.
+- Limit the permissions of your Service Principal to only those necessary for the deployment process.
+
+### Troubleshooting
+
+**Issue**: Deployment fails with an authentication error.
+**Solution**: Ensure that the Azure Service Principal credentials are correctly set up as GitHub secrets (e.g., `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, `ARM_TENANT_ID`, `ARM_SUBSCRIPTION_ID`). Verify that the Service Principal has the necessary permissions in your Azure subscription.
+
+**Issue**: Insufficient storage capacity error.
+**Solution**: Check the `storage_capacity` setting in the `main.tf` file to ensure that the requested capacity is within the limits for the selected region and SKU.
 
 ### Cost Considerations
 
@@ -103,7 +118,7 @@ For testing and development purposes, consider using a smaller capacity and the 
 
 Here’s a sample configuration for `main.tf`:
 
-```
+```HCL
 variable "resource_group_name" {
   default = "example-lustre-rg"
 }
@@ -128,7 +143,7 @@ This example will deploy a 16 TB Lustre file system in the eastus region, using 
 
 ### Resources
 
-- [Azure Managed Lustre Documentation](https://learn.microsoft.com/en-us/azure/storage/files/storage-files-introduction)
+- [Azure Managed Lustre Documentation](https://learn.microsoft.com/en-us/azure/azure-managed-lustre/amlfs-overview)
 - [Terraform Azure Provider Documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 
