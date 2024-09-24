@@ -163,24 +163,44 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_lustre_file_system.lustre](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/lustre_file_system) | resource |
+| [azurerm_managed_lustre_file_system.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_lustre_file_system) | resource |
+| [azurerm_resource_group.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
 | [azurerm_resource_group.rg](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
+| [azurerm_subnet.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet) | resource |
+| [azurerm_virtual_network.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) | resource |
 | [null_resource.create_lustre_fs](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [null_resource.lustre_retry](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_availability_zone"></a> [availability\_zone](#input\_availability\_zone) | n/a | `number` | `1` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | A list of availability zones where the Lustre file system will be deployed. E.g., ['1'], ['2'], etc. | `list(string)` | <pre>[<br>  "2"<br>]</pre> | no |
+| <a name="input_backup_enabled"></a> [backup\_enabled](#input\_backup\_enabled) | Enable backups for the Managed Lustre file system. | `bool` | `false` | no |
 | <a name="input_delay_between_retries"></a> [delay\_between\_retries](#input\_delay\_between\_retries) | n/a | `number` | `300` | no |
-| <a name="input_location"></a> [location](#input\_location) | n/a | `string` | `"southcentralus"` | no |
+| <a name="input_encryption_type"></a> [encryption\_type](#input\_encryption\_type) | Specifies the type of encryption to be used. Valid values are EncryptionAtRestWithPlatformKey and EncryptionAtRestWithCustomerKey. | `string` | `"EncryptionAtRestWithPlatformKey"` | no |
+| <a name="input_location"></a> [location](#input\_location) | The Azure region to deploy the Lustre file system, e.g., West Europe. | `string` | `"West Europe"` | no |
 | <a name="input_lustre_config_file"></a> [lustre\_config\_file](#input\_lustre\_config\_file) | n/a | `string` | `"./lustre_configuration.json"` | no |
-| <a name="input_lustre_name"></a> [lustre\_name](#input\_lustre\_name) | n/a | `string` | `"myLustreFS"` | no |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Define variables | `string` | `"myResourceGroup"` | no |
-| <a name="input_retry_limit"></a> [retry\_limit](#input\_retry\_limit) | n/a | `number` | `5` | no |
+| <a name="input_lustre_name"></a> [lustre\_name](#input\_lustre\_name) | The name of the Managed Lustre file system. | `string` | `"example-amlfs"` | no |
+| <a name="input_maintenance_day"></a> [maintenance\_day](#input\_maintenance\_day) | Day of the week for the maintenance window. Valid values are Sunday through Saturday. | `string` | `"Friday"` | no |
+| <a name="input_maintenance_time_utc"></a> [maintenance\_time\_utc](#input\_maintenance\_time\_utc) | Start time of the maintenance window in UTC, e.g., '22:00'. | `string` | `"22:00"` | no |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group where the Lustre file system and related resources will be deployed. | `string` | `"example-resources"` | no |
+| <a name="input_retry_delay_seconds"></a> [retry\_delay\_seconds](#input\_retry\_delay\_seconds) | Delay between retry attempts in seconds. | `number` | `180` | no |
+| <a name="input_retry_limit"></a> [retry\_limit](#input\_retry\_limit) | Number of retry attempts in case of failure. | `number` | `5` | no |
 | <a name="input_sku"></a> [sku](#input\_sku) | n/a | `string` | `"Standard_LRS"` | no |
+| <a name="input_sku_name"></a> [sku\_name](#input\_sku\_name) | The SKU of the Managed Lustre File System. Valid options are: AMLFS-Durable-Premium-40, AMLFS-Durable-Premium-125, AMLFS-Durable-Premium-250, and AMLFS-Durable-Premium-500. | `string` | `"AMLFS-Durable-Premium-250"` | no |
 | <a name="input_storage_capacity"></a> [storage\_capacity](#input\_storage\_capacity) | n/a | `number` | `32` | no |
+| <a name="input_storage_capacity_in_tb"></a> [storage\_capacity\_in\_tb](#input\_storage\_capacity\_in\_tb) | The storage capacity of the Lustre file system in Terabytes (TB). The valid range depends on the selected SKU. | `number` | `250` | no |
+| <a name="input_subnet_address_prefix"></a> [subnet\_address\_prefix](#input\_subnet\_address\_prefix) | The address prefix for the subnet in CIDR format. | `string` | `"10.0.2.0/24"` | no |
+| <a name="input_subnet_name"></a> [subnet\_name](#input\_subnet\_name) | The name of the subnet within the virtual network where the Lustre file system will be placed. | `string` | `"example-subnet"` | no |
+| <a name="input_vnet_address_space"></a> [vnet\_address\_space](#input\_vnet\_address\_space) | The address space for the virtual network in CIDR format. | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_vnet_name"></a> [vnet\_name](#input\_vnet\_name) | The name of the virtual network that will contain the Lustre file system. | `string` | `"example-vnet"` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_lustre_file_system_id"></a> [lustre\_file\_system\_id](#output\_lustre\_file\_system\_id) | The ID of the Managed Lustre File System. |
+| <a name="output_network_details"></a> [network\_details](#output\_network\_details) | The virtual network and subnet details where the Lustre File System resides. |
 <!-- END_TF_DOCS -->
