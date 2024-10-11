@@ -25,8 +25,7 @@ create_managed_lustre() {
         --location $LOCATION \
         --sku $SKU \
         --storage-capacity $STORAGE_CAPACITY \
-        --zones $ZONE \
-        --lustre-configuration $LUSTRE_CONFIG_FILE
+        --zones $ZONE
 
     return $?
 }
