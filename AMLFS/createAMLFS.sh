@@ -2,14 +2,19 @@
 
 # Variables (can be passed as arguments or set as environment variables)
 RETRY_LIMIT=${1:-5}  # Number of retries, default is 5
-STORAGE_CAPACITY=${2:-32}  # Storage capacity in TB, default is 32 TB
+DELAY_BETWEEN_RETRIES=300  # 5 minutes (300 seconds) delay between retries
+
 RESOURCE_GROUP=${3:-"myResourceGroup"}  # Azure resource group, default is "myResourceGroup"
 LUSTRE_NAME=${4:-"myLustreFS"}  # Azure Lustre file system name
-SKU=${5:-"Standard_LRS"}  # Lustre SKU (Standard_LRS or Premium_LRS), default is Standard_LRS
-LUSTRE_CONFIG_FILE=${6:-"lustre_configuration.json"}  # Lustre configuration file
 LOCATION="eastus"  # Fixed region to South Central US
+# SKU Info
+# AMLFS-Durable-Premium-40	40 MBps	    48 TB minimum	768 TB	maximun    48 TB Increment
+# AMLFS-Durable-Premium-125	125 MBps	16 TB minimum	128 TB	maximum    16 TB Increment
+# AMLFS-Durable-Premium-250	250 MBps	8 TB minimum	128 TB	maximum    8 TB Increment
+# AMLFS-Durable-Premium-500	500 MBps	4 TB minimum	128 TB	maximum    4 TB Increment
+STORAGE_CAPACITY=${2:-48}
+SKU=${5:-"AMLFS-Durable-Premium-40"}
 ZONE=${7:-1}  # Availability zone, default is zone 1
-DELAY_BETWEEN_RETRIES=300  # 5 minutes (300 seconds) delay between retries
 
 # Retry configuration
 RETRY_COUNT=0
