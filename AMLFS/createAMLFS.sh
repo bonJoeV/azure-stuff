@@ -7,7 +7,7 @@ RESOURCE_GROUP=${3:-"myResourceGroup"}  # Azure resource group, default is "myRe
 LUSTRE_NAME=${4:-"myLustreFS"}  # Azure Lustre file system name
 SKU=${5:-"Standard_LRS"}  # Lustre SKU (Standard_LRS or Premium_LRS), default is Standard_LRS
 LUSTRE_CONFIG_FILE=${6:-"lustre_configuration.json"}  # Lustre configuration file
-LOCATION="southcentralus"  # Fixed region to South Central US
+LOCATION="eastus"  # Fixed region to South Central US
 ZONE=${7:-1}  # Availability zone, default is zone 1
 DELAY_BETWEEN_RETRIES=300  # 5 minutes (300 seconds) delay between retries
 
