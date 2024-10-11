@@ -18,9 +18,12 @@ SKU=${6:-"AMLFS-Durable-Premium-40"}
 
 ZONE=${7:-1}  # Availability zone, default is zone 1
 
-# New variables for maintenance window
+# variables for maintenance window
 MAINTENANCE_DAY=${8:-"friday"}   # Maintenance day of the week
 MAINTENANCE_TIME=${9:-"22:00"}   # Maintenance time in UTC (24-hour format)
+
+# variable for filesystem subnet
+FILESYSTEM_SUBNET=${10:-"lustre-vnet"}  # Subnet ID for the filesystem
 
 # Retry configuration
 RETRY_COUNT=0
@@ -28,7 +31,7 @@ SUCCESS=0
 
 # Function to create Managed Lustre file system
 create_managed_lustre() {
-    echo "Attempting to create Azure Managed Lustre: $LUSTRE_NAME in region $LOCATION with $STORAGE_CAPACITY TB, SKU $SKU, Availability Zone $ZONE, Maintenance Window $MAINTENANCE_DAY at $MAINTENANCE_TIME..."
+    echo "Attempting to create Azure Managed Lustre: $LUSTRE_NAME in region $LOCATION with $STORAGE_CAPACITY TB, SKU $SKU, Availability Zone $ZONE, Maintenance Window $MAINTENANCE_DAY at $MAINTENANCE_TIME, Filesystem Subnet $FILESYSTEM_SUBNET..."
 
     az amlfs create \
         --resource-group "$RESOURCE_GROUP" \
@@ -37,7 +40,8 @@ create_managed_lustre() {
         --sku "$SKU" \
         --storage-capacity "$STORAGE_CAPACITY" \
         --zones "$ZONE" \
-        --maintenance-window "{\"dayOfWeek\":\"$MAINTENANCE_DAY\",\"timeOfDayUtc\":\"$MAINTENANCE_TIME\"}"
+        --maintenance-window "{\"dayOfWeek\":\"$MAINTENANCE_DAY\",\"timeOfDayUtc\":\"$MAINTENANCE_TIME\"}" \
+        --filesystem-subnet "$FILESYSTEM_SUBNET"
 
     return $?
 }
