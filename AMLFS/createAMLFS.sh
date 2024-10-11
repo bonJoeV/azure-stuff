@@ -19,7 +19,7 @@ SUCCESS=0
 create_managed_lustre() {
     echo "Attempting to create Azure Managed Lustre: $LUSTRE_NAME in region $LOCATION with $STORAGE_CAPACITY TB, SKU $SKU, and Availability Zone $ZONE..."
 
-    az lustre create \
+    az amlfs create \
         --resource-group $RESOURCE_GROUP \
         --name $LUSTRE_NAME \
         --location $LOCATION \
