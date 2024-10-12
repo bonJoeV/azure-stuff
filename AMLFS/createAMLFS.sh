@@ -18,12 +18,12 @@ SKU=${6:-"AMLFS-Durable-Premium-40"}
 
 ZONE=${7:-1}  # Availability zone, default is zone 1
 
-# variables for maintenance window
+# Variables for maintenance window
 MAINTENANCE_DAY=${8:-"friday"}   # Maintenance day of the week
 MAINTENANCE_TIME=${9:-"22:00"}   # Maintenance time in UTC (24-hour format)
 
-# variable for subscription ID
-SUBSCRIPTION_ID=${10:-"12345678-abc1-abc2-abc3-abc987654321"}  # Your subscription ID
+# Variable for subscription ID
+SUBSCRIPTION_ID=${10:-"56481b06-c4a3-441a-a090-1ebce6bc3642"}  # Your subscription ID
 
 # Variables for VNet and Subnet names
 VNET_NAME=${11:-"lustre-vnet"}    # Virtual network name
@@ -31,6 +31,14 @@ SUBNET_NAME=${12:-"default"}      # Subnet name
 
 # Construct the FILESYSTEM_SUBNET using subscription ID, resource group, VNet, and subnet
 FILESYSTEM_SUBNET="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$SUBNET_NAME"
+
+# Set the Azure CLI to use the specified subscription
+echo "Setting Azure CLI to use subscription ID: $SUBSCRIPTION_ID"
+az account set --subscription "$SUBSCRIPTION_ID"
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to set Azure CLI to use subscription ID: $SUBSCRIPTION_ID"
+    exit 1
+fi
 
 # Retry configuration
 RETRY_COUNT=0
@@ -69,15 +77,15 @@ while [ $RETRY_COUNT -lt $RETRY_LIMIT ]; do
         echo "Failed to create Azure Managed Lustre. Retrying... ($((RETRY_COUNT + 1))/$RETRY_LIMIT)"
         ((RETRY_COUNT++))
         if [ $RETRY_COUNT -lt $RETRY_LIMIT ]; then
-            echo "Waiting for $DELAY_BETWEEN_RETRIES seconds (5 minutes) before retrying..."
-            sleep $DELAY_BETWEEN_RETRIES  # 5-minute delay before retrying
+            echo "Waiting for $DELAY_BETWEEN_RETRIES seconds before retrying..."
+            sleep $DELAY_BETWEEN_RETRIES
         fi
     fi
 done
 
 # Check if creation was successful
 if [ $SUCCESS -eq 0 ]; then
-    echo "Failed to create Azure Managed Lustre after $RETRY_COUNT attempts."
+    echo "Error: Failed to create Azure Managed Lustre after $RETRY_COUNT attempts."
     exit 1
 else
     echo "Azure Managed Lustre $LUSTRE_NAME created successfully."
