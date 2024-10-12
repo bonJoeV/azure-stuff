@@ -72,9 +72,9 @@ if [[ -z "$RESOURCE_GROUP" || -z "$LUSTRE_NAME" || -z "$SUBSCRIPTION_ID" || -z "
 fi
 
 # Set default values if not provided
-LOCATION=${LOCATION:-"eastus"}  # Fixed region to East US
-STORAGE_CAPACITY=${STORAGE_CAPACITY:-48}
-SKU=${SKU:-"AMLFS-Durable-Premium-40"}
+LOCATION=${LOCATION:-"eastus"}  # default region to East US
+STORAGE_CAPACITY=${STORAGE_CAPACITY:-4}  # cheaper to test at 4tb and 500MBps
+SKU=${SKU:-"AMLFS-Durable-Premium-500"} # cheaper to test at 4tb and 500MBps
 ZONE=${ZONE:-1}  # Availability zone, default is zone 1
 MAINTENANCE_DAY=${MAINTENANCE_DAY:-"friday"}   # Maintenance day of the week
 MAINTENANCE_TIME=${MAINTENANCE_TIME:-"22:00"}  # Maintenance time in UTC (24-hour format)
