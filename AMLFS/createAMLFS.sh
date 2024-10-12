@@ -22,8 +22,15 @@ ZONE=${7:-1}  # Availability zone, default is zone 1
 MAINTENANCE_DAY=${8:-"friday"}   # Maintenance day of the week
 MAINTENANCE_TIME=${9:-"22:00"}   # Maintenance time in UTC (24-hour format)
 
-# variable for filesystem subnet
-FILESYSTEM_SUBNET=${10:-"lustre-vnet"}  # Subnet ID for the filesystem
+# variable for subscription ID
+SUBSCRIPTION_ID=${10:-"12345678-abc1-abc2-abc3-abc987654321"}  # Your subscription ID
+
+# Variables for VNet and Subnet names
+VNET_NAME=${11:-"lustre-vnet"}    # Virtual network name
+SUBNET_NAME=${12:-"default"}      # Subnet name
+
+# Construct the FILESYSTEM_SUBNET using subscription ID, resource group, VNet, and subnet
+FILESYSTEM_SUBNET="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$SUBNET_NAME"
 
 # Retry configuration
 RETRY_COUNT=0
@@ -31,7 +38,12 @@ SUCCESS=0
 
 # Function to create Managed Lustre file system
 create_managed_lustre() {
-    echo "Attempting to create Azure Managed Lustre: $LUSTRE_NAME in region $LOCATION with $STORAGE_CAPACITY TB, SKU $SKU, Availability Zone $ZONE, Maintenance Window $MAINTENANCE_DAY at $MAINTENANCE_TIME, Filesystem Subnet $FILESYSTEM_SUBNET..."
+    echo "Attempting to create Azure Managed Lustre: $LUSTRE_NAME in region $LOCATION with the following settings:"
+    echo "  Storage Capacity: $STORAGE_CAPACITY TB"
+    echo "  SKU: $SKU"
+    echo "  Availability Zone: $ZONE"
+    echo "  Maintenance Window: $MAINTENANCE_DAY at $MAINTENANCE_TIME UTC"
+    echo "  Filesystem Subnet: $FILESYSTEM_SUBNET"
 
     az amlfs create \
         --resource-group "$RESOURCE_GROUP" \
@@ -54,7 +66,7 @@ while [ $RETRY_COUNT -lt $RETRY_LIMIT ]; do
         SUCCESS=1
         break
     else
-        echo "Failed to create Azure Managed Lustre. Retrying... ($RETRY_COUNT/$RETRY_LIMIT)"
+        echo "Failed to create Azure Managed Lustre. Retrying... ($((RETRY_COUNT + 1))/$RETRY_LIMIT)"
         ((RETRY_COUNT++))
         if [ $RETRY_COUNT -lt $RETRY_LIMIT ]; then
             echo "Waiting for $DELAY_BETWEEN_RETRIES seconds (5 minutes) before retrying..."
