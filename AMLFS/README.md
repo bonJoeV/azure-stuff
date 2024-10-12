@@ -18,7 +18,7 @@ Azure Managed Lustre is ideal for workloads that require low-latency, high-throu
 ├── CONTRIBUTING.md             # Contribution information
 ├── LICENSE                     # MIT License file
 ├── README.md                   # Readme file with project details and setup instructions
-├── createAMLFS.sh              # Manual bash script
+├── createlustre.sh              # Manual bash script
 ├── lustre_configuration.json   # Configuration file for Azure Managed Lustre
 └── main.tf                     # Terraform script to deploy Azure Managed Lustre
 ```
@@ -78,7 +78,7 @@ You can monitor the deployment process in the **Actions** tab of your GitHub rep
 
 ### Alternate Deployment Option: `createAMLFS.sh`
 
-If you prefer not to use Terraform and GitHub Actions for deployment, you can utilize the [`createAMLFS.sh`](./createAMLFS.sh) script as an alternate deployment method. This script simplifies the setup process by directly using Azure CLI commands to create and configure an Azure Managed Lustre file system. The script also includes built-in retry and backoff logic to handle transient errors.
+If you prefer not to use Terraform and GitHub Actions for deployment, you can utilize the [`creatlustre.sh`](./creatlustre.sh) script as an alternate deployment method. This script simplifies the setup process by directly using Azure CLI commands to create and configure an Azure Managed Lustre file system. The script also includes built-in retry and backoff logic to handle transient errors.
 
 To run the script:
 1. Ensure you have the Azure CLI installed (`az` command).
