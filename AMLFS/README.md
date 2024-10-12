@@ -18,7 +18,7 @@ Azure Managed Lustre is ideal for workloads that require low-latency, high-throu
 ├── CONTRIBUTING.md             # Contribution information
 ├── LICENSE                     # MIT License file
 ├── README.md                   # Readme file with project details and setup instructions
-├── createlustre.sh              # Manual bash script
+├── createlustre.sh             # Manual bash script
 ├── lustre_configuration.json   # Configuration file for Azure Managed Lustre
 └── main.tf                     # Terraform script to deploy Azure Managed Lustre
 ```
