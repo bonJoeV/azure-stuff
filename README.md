@@ -5,3 +5,5 @@ Occasionally, I release updates from my private repo to the public, though much 
 ### Open Projects ###
 
 -[Azure Managed Lustre Deployment with Terraform and GitHub Actions](/AMLFS)
+
+-[Mapping Logical Availability Zones to Physical Zones in Azure](/AvailabilityZonePeering)
