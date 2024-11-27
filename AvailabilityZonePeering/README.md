@@ -80,16 +80,16 @@ Before determining the mapping, register the `AvailabilityZonePeering` feature i
 
 ```bash
 # Register the AvailabilityZonePeering feature
-az feature register --namespace Microsoft.Resources --name AvailabilityZonePeering
+az feature register --namespace Microsoft.Resources --name AvailabilityZonePeering --subscription YOUR_PEER_SUBSCRIPTION_ID
 
 # Register the Microsoft.Resources provider
-az provider register --namespace Microsoft.Resources
+az provider register --namespace Microsoft.Resources --subscription YOUR_PEER_SUBSCRIPTION_ID
 ```
 
 **Note**: It may take some time for the feature to register. Check the status using:
 
 ```bash
-az feature show --namespace Microsoft.Resources --name AvailabilityZonePeering
+az feature show --namespace Microsoft.Resources --name AvailabilityZonePeering  --subscription YOUR_PEER_SUBSCRIPTION_ID
 ```
 
 Wait until the `registrationState` is `Registered` before proceeding.
