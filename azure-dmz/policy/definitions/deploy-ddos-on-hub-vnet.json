@@ -1,0 +1,35 @@
+{
+  "name": "deploy-ddos-on-hub-vnet",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "properties": {
+    "displayName": "Deploy DDoS protection on hub VNets (tag-based scope)",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "description": "DeployIfNotExists scaffold that targets VNets tagged as hub and ensures DDoS protection is enabled.",
+    "metadata": {
+      "category": "Network"
+    },
+    "parameters": {
+      "hubTagName": {
+        "type": "String",
+        "defaultValue": "networkRole"
+      },
+      "hubTagValue": {
+        "type": "String",
+        "defaultValue": "hub"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          { "field": "type", "equals": "Microsoft.Network/virtualNetworks" },
+          { "field": "tags[parameters('hubTagName')]", "equals": "[parameters('hubTagValue')]" },
+          { "field": "Microsoft.Network/virtualNetworks/enableDdosProtection", "notEquals": "true" }
+        ]
+      },
+      "then": {
+        "effect": "Audit"
+      }
+    }
+  }
+}

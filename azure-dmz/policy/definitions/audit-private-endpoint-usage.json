@@ -1,0 +1,44 @@
+{
+  "name": "audit-private-endpoint-usage",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "properties": {
+    "displayName": "Audit resources not using Private Endpoints (tag-based signal)",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "description": "Audits resources missing a required tag that indicates the service is onboarded via Private Endpoint. Use this as an enforcement signal where a universal Deny is not feasible across all resource types.",
+    "metadata": {
+      "category": "Network"
+    },
+    "parameters": {
+      "requiredTagName": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Required tag name",
+          "description": "Tag indicating the resource is reachable only via Private Endpoint."
+        },
+        "defaultValue": "privateEndpointEnabled"
+      },
+      "requiredTagValue": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Required tag value",
+          "description": "Expected value of the required tag."
+        },
+        "defaultValue": "true"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "tags[parameters('requiredTagName')]",
+            "notEquals": "[parameters('requiredTagValue')]"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Audit"
+      }
+    }
+  }
+}

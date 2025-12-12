@@ -1,0 +1,14 @@
+# OS
+Thumbs.db
+Desktop.ini
+
+# Terraform (if added later)
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Logs
+*.log
+
+# VS Code
+.vscode/

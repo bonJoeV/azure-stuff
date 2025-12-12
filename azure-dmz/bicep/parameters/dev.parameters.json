@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": { "value": "dev" },
+    "location": { "value": "eastus" },
+    "hubResourceGroupName": { "value": "rg-hub-dev" },
+    "ingressType": { "value": "frontDoor" },
+
+    "hubVnetAddressPrefix": { "value": "10.0.0.0/16" },
+    "hubSubnetPrefixes": {
+      "value": {
+        "firewall": "10.0.0.0/24",
+        "appGateway": "10.0.1.0/24",
+        "sharedServices": "10.0.2.0/24"
+      }
+    },
+
+    "tags": {
+      "value": {
+        "owner": "PlatformTeam",
+        "service": "ingress",
+        "environment": "dev"
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "mountPath": "/mnt/lustre",
+  "dataTransferSpeed": "1024MB/s",
+  "performanceMode": "maxThroughput"
+}

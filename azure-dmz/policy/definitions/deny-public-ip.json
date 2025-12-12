@@ -1,0 +1,27 @@
+{
+  "name": "deny-public-ip-creation",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "properties": {
+    "displayName": "Deny creation of Public IP addresses",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Prevents creation of Microsoft.Network/publicIPAddresses in workload subscriptions.",
+    "metadata": {
+      "category": "Network"
+    },
+    "parameters": {},
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/publicIPAddresses"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Deny"
+      }
+    }
+  }
+}

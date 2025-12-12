@@ -1,0 +1,97 @@
+{
+  "name": "dmz-ingress-enforcement",
+  "type": "Microsoft.Authorization/policySetDefinitions",
+  "properties": {
+    "displayName": "DMZ / Ingress enforcement (centralized inbound)",
+    "policyType": "Custom",
+    "description": "Guardrails to enforce centralized inbound access patterns (no public IPs in spokes, deny open inbound NSG rules, diagnostics, and auditing onboarding signals).",
+    "metadata": {
+      "category": "Network"
+    },
+    "parameters": {
+      "logAnalyticsWorkspaceId": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Log Analytics workspace resource ID"
+        }
+      }
+    },
+    "policyDefinitions": [
+      {
+        "policyDefinitionReferenceId": "denyPublicIp",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/deny-public-ip-creation')]"
+      },
+      {
+        "policyDefinitionReferenceId": "denyNicPublicIpAssociation",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/deny-nic-public-ip-association')]"
+      },
+      {
+        "policyDefinitionReferenceId": "denyNsgInboundAny",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/deny-nsg-inbound-any')]"
+      },
+      {
+        "policyDefinitionReferenceId": "enforceKeyVaultPnaDisabled",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/enforce-keyvault-public-network-disabled')]"
+      },
+      {
+        "policyDefinitionReferenceId": "auditKeyVaultRbacEnabled",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/audit-keyvault-rbac-enabled')]"
+      },
+      {
+        "policyDefinitionReferenceId": "enforceStorageBaseline",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/enforce-storage-baseline')]"
+      },
+      {
+        "policyDefinitionReferenceId": "enforceAppServicePnaDisabled",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/enforce-appservice-public-network-disabled')]"
+      },
+      {
+        "policyDefinitionReferenceId": "enforceSqlPnaDisabled",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/enforce-sql-public-network-disabled')]"
+      },
+      {
+        "policyDefinitionReferenceId": "enforceCosmosPnaDisabled",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/enforce-cosmos-public-network-disabled')]"
+      },
+      {
+        "policyDefinitionReferenceId": "enforceAcrPnaDisabled",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/enforce-acr-public-network-disabled')]"
+      },
+      {
+        "policyDefinitionReferenceId": "enforceApimPnaDisabled",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/enforce-apim-public-network-disabled')]"
+      },
+      {
+        "policyDefinitionReferenceId": "enforceAksPrivateCluster",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/enforce-aks-private-cluster')]"
+      },
+      {
+        "policyDefinitionReferenceId": "auditPrivateEndpoint",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/audit-private-endpoint-usage')]",
+        "parameters": {
+          "requiredTagName": { "value": "privateEndpointEnabled" },
+          "requiredTagValue": { "value": "true" }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "deployDiagnostics",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-to-log-analytics')]",
+        "parameters": {
+          "logAnalyticsWorkspaceId": { "value": "[parameters('logAnalyticsWorkspaceId')]" }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "auditDdosOnHubVnet",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/deploy-ddos-on-hub-vnet')]"
+      },
+      {
+        "policyDefinitionReferenceId": "auditApprovedWaf",
+        "policyDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/policyDefinitions/audit-approved-waf')]",
+        "parameters": {
+          "requiredTagName": { "value": "approvedWafFronted" },
+          "requiredTagValue": { "value": "true" }
+        }
+      }
+    ]
+  }
+}

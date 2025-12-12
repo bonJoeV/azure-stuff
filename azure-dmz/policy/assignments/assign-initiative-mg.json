@@ -1,0 +1,20 @@
+{
+  "type": "Microsoft.Authorization/policyAssignments",
+  "apiVersion": "2022-06-01",
+  "name": "assign-dmz-ingress-enforcement",
+  "properties": {
+    "displayName": "Assign DMZ / Ingress enforcement",
+    "description": "Assigns the DMZ/Ingress initiative at a management group scope, excluding platform subscriptions.",
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/<MG_ID>/providers/Microsoft.Authorization/policySetDefinitions/dmz-ingress-enforcement",
+    "enforcementMode": "Default",
+    "parameters": {
+      "logAnalyticsWorkspaceId": {
+        "value": "/subscriptions/<PLATFORM_SUB_ID>/resourceGroups/<RG>/providers/Microsoft.OperationalInsights/workspaces/<LAW_NAME>"
+      }
+    },
+    "notScopes": [
+      "/subscriptions/<CONNECTIVITY_SUB_ID>",
+      "/subscriptions/<MANAGEMENT_SUB_ID>"
+    ]
+  }
+}

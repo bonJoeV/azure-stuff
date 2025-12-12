@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  bicep-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Azure CLI
+        uses: azure/CLI@v2
+        with:
+          azcliversion: 2.60.0
+          inlineScript: |
+            az bicep install
+            echo "Azure CLI version:"
+            az version
+
+      - name: Build all Bicep files
+        uses: azure/CLI@v2
+        with:
+          azcliversion: 2.60.0
+          inlineScript: |
+            set -e
+            echo "Building all .bicep files"
+            files=$(find bicep -name "*.bicep" -print)
+            for f in $files; do
+              echo "az bicep build --file $f"
+              az bicep build --file "$f" > /dev/null
+            done
+            echo "OK"

@@ -1,0 +1,81 @@
+{
+  "name": "deploy-diagnostics-to-log-analytics",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "properties": {
+    "displayName": "Deploy diagnostic settings to Log Analytics (generic scaffold)",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "DeployIfNotExists scaffold. You should tailor resource types and categories for your enterprise standards.",
+    "metadata": {
+      "category": "Monitoring"
+    },
+    "parameters": {
+      "logAnalyticsWorkspaceId": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Log Analytics workspace resource ID"
+        }
+      }
+    },
+    "policyRule": {
+      "if": {
+        "field": "type",
+        "in": [
+          "Microsoft.Network/azureFirewalls",
+          "Microsoft.Network/applicationGateways"
+        ]
+      },
+      "then": {
+        "effect": "DeployIfNotExists",
+        "details": {
+          "type": "Microsoft.Insights/diagnosticSettings",
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa"
+          ],
+          "existenceCondition": {
+            "allOf": [
+              {
+                "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                "equals": "[parameters('logAnalyticsWorkspaceId')]"
+              }
+            ]
+          },
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {
+                  "resourceName": { "type": "string" },
+                  "resourceId": { "type": "string" },
+                  "workspaceId": { "type": "string" }
+                },
+                "resources": [
+                  {
+                    "type": "Microsoft.Insights/diagnosticSettings",
+                    "apiVersion": "2021-05-01-preview",
+                    "name": "[concat(parameters('resourceName'), '-diag')]",
+                    "scope": "[parameters('resourceId')]",
+                    "properties": {
+                      "workspaceId": "[parameters('workspaceId')]",
+                      "logs": [],
+                      "metrics": [
+                        { "category": "AllMetrics", "enabled": true }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "parameters": {
+                "resourceName": { "value": "[field('name')]" },
+                "resourceId": { "value": "[field('id')]" },
+                "workspaceId": { "value": "[parameters('logAnalyticsWorkspaceId')]" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

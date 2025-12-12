@@ -1,0 +1,51 @@
+# GitHub Actions pipeline for deploying Azure Managed Lustre using Terraform
+name: Azure Managed Lustre Terraform Deployment
+
+# Run the workflow on pushes to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu VM as the GitHub runner
+
+    # Define the environment variables for the job
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+    steps:
+    # Step 1: Checkout the code from the repository
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    # Step 2: Set up Terraform
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.5.0  # Specify the version of Terraform to install
+
+    # Step 3: Azure CLI Login using the Service Principal credentials from secrets
+    - name: Azure CLI Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Step 4: Terraform Init (Initialize Terraform backend and configure the remote state)
+    - name: Terraform Init
+      run: |
+        terraform init           -backend-config="storage_account_name=mystatestorageaccount"           -backend-config="container_name=tfstate"           -backend-config="resource_group_name=myResourceGroup"           -backend-config="key=terraform.tfstate"
+
+    # Step 5: Terraform Apply (Deploy Azure Managed Lustre with retry logic)
+    # The terraform apply will deploy the infrastructure using the Terraform script from the repo.
+    - name: Terraform Apply
+      run: |
+        terraform apply -auto-approve           -var "resource_group_name=myResourceGroup"           -var "location=southcentralus"           -var "lustre_name=myLustreFS"           -var "sku=Standard_LRS"           -var "storage_capacity=32"           -var "lustre_config_file=./lustre_configuration.json"
+
+    # Optional: Step 6: Output information about the deployed resources (For Debugging)
+    - name: Show Outputs
+      run: terraform output

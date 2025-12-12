@@ -1,0 +1,44 @@
+{
+  "name": "deny-nic-public-ip-association",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "properties": {
+    "displayName": "Deny NICs with Public IP association",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Prevents attaching an existing Public IP to a NIC IP configuration. Complements 'Deny creation of Public IP addresses' and closes the loophole of reusing pre-existing PIPs.",
+    "metadata": {
+      "category": "Network"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect"
+        },
+        "allowedValues": [
+          "Deny",
+          "Audit",
+          "Disabled"
+        ],
+        "defaultValue": "Deny"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/networkInterfaces"
+          },
+          {
+            "field": "Microsoft.Network/networkInterfaces/ipConfigurations[*].publicIpAddress.id",
+            "exists": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}
